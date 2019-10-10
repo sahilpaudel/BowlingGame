@@ -45,10 +45,17 @@ class Game {
     
     private int laneNumber;
     private List<Player> players;
+    private Set<Integer> busyLane;
     
-    public Game(int laneNumber, List<Player> players) {
+    public Game(int laneNumber, List<Player> players, Set<Integer> busyLane) throws Exception {
         this.laneNumber = laneNumber;
         this.players = players;
+        
+        if (busyLane.contains(laneNumber)){
+            throw new Exception("Lane "+laneNumber+" already in use");
+        } else {
+            busyLane.add(laneNumber);
+        }
     }
     
     private int getScore() {
@@ -79,20 +86,23 @@ class Game {
         }
     }
     
-    public int getLaneNumber() {
-        return laneNumber;
-    }
-    
-    public List<Player> getPlayers() {
-        return players;
-    }
-    
-    public void setLaneNumber(int laneNumber) {
-        this.laneNumber = laneNumber;
-    }
-    
-    public void setPlayers(List<Player> players) {
-        this.players = players;
+    public void getResult() {
+        
+        int highest = 0;
+        String winner = "";
+        
+        for (Player p: players) {
+            System.out.println("Name: " + p.getName());
+            System.out.println("Points: " + p.getPoints());
+            
+            int lastPoint = p.getPoints().get(9).getSum();
+            
+            if (lastPoint > highest) {
+                highest = lastPoint;
+                winner = p.getName();
+            }
+        }
+        System.out.println("\nLane Number: "+laneNumber+", Winner: " + winner + ", Points: " + highest);
     }
 }
 
@@ -113,15 +123,7 @@ class Shot {
     private int getSecond() {
         return second;
     }
-    
-    public void setFirst(int first) {
-        this.first = first;
-    }
-    
-    public void setSecond(int second) {
-        this.second = second;
-    }
-    
+  
     public int getSum(){
         return sum;
     }
@@ -138,10 +140,13 @@ class Shot {
 
 public class BowlingGame {
     public static void main(String args[]) throws Exception {
-        Player p1 = new Player(1, "PlayerOne");
-        Player p2 = new Player(2, "PlayerTwo");
-        Player p3 = new Player(3, "PlayerThree");
-        Player p4 = new Player(4, "PlayerFour");
+        
+        Set<Integer> busyLane = new HashSet<>();
+        
+        Player p1 = new Player(1, "Sahil");
+        Player p2 = new Player(2, "Noble");
+        Player p3 = new Player(3, "Subrat");
+        Player p4 = new Player(4, "Puneet");
         
         List<Player> players = new ArrayList();
         players.add(p1);
@@ -149,27 +154,30 @@ public class BowlingGame {
         players.add(p3);
         players.add(p4);
         
-        Game game = new Game(1, players);
+        Game game = new Game(1, players, busyLane);
+        
         for (int i = 0; i < 10; i++)
             game.play(i);
         
-        players = game.getPlayers();
+        game.getResult();
         
-        int highest = 0;
-        String winner = "";
+        game = new Game(2, players, busyLane);
+        for (int i = 0; i < 10; i++)
+            game.play(i);
         
-        for (Player p: players) {
-            System.out.println("Name: " + p.getName());
-            System.out.println("Points: " + p.getPoints());
-            
-            int lastPoint = p.getPoints().get(9).getSum();
-            
-            if (lastPoint > highest) {
-                highest = lastPoint;
-                winner = p.getName();
-            }
-        }
-        System.out.println("\nWinner: " + winner + " Points: " + highest);
+        game.getResult();
+        
+        game = new Game(3, players, busyLane);
+        for (int i = 0; i < 10; i++)
+            game.play(i);
+        
+        game.getResult();
+        
+        game = new Game(4, players, busyLane);
+        for (int i = 0; i < 10; i++)
+            game.play(i);
+        
+        game.getResult();
         
     }
 }
