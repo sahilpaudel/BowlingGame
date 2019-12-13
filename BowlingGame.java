@@ -1,7 +1,7 @@
 import java.util.*;
 
 /**
-@author Sahil Paudel
+@author Sahil Paudel 
  */
 
 class Player {
